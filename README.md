@@ -1,1 +1,1 @@
-# PGC-1alpha
+# PGC-1a
