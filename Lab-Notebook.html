@@ -236,58 +236,132 @@ vervPGC1a.full.vcf</code></pre>
 <pre class="{r}`r&#39;&#39;`"><code>wc -l vervPGC1a.full.vcf</code></pre>
 <pre><code>2340 vervPGC1a.full.vcf</code></pre>
 <pre class="{r}`r&#39;&#39;`"><code>grep -c &quot;^##&quot; vervPGC1a.full.vcf</code></pre>
-<pre><code>38  
-
-
-Note: At this point vervPGC1a.full.vcf was renamed to vervpcg1a.full.vcf.
-
-Questions:  
-If the download of a file from the SCC is interrupted accidentally, how do I unpause the download without starting it all over again?     
-When I used the &#39;tabix -p&#39; command, when I hit return it just went down a line; after a couple minutes it goes. How do I make it run sooner?  
-
-## Functional Regions
-
-Number: Start coordinate-End coordinate (length)
-
-**Exon 1: 26,465,499-26,465,783 (285)**  
-  *Intron 1-2: 26465784-26470781 (4998)*   
-**Exon 2: 26470782-26470961 (180)**   
-  *Intron 2-3: 26470962-26523412 (52451)*   
-**Exon 3: 26523413-26523607 (195)**   
-  *Intron 3-4: 26523608-26525582 (1975)*   
-**Exon 4: 26525583-26525705 (123)**   
-  *Intron 4-5: 26525706-26526565 (860)*   
-**Exon 5: 26526566-26526770 (205)**   
-  *Intron 5-6: 26526771-26530747 (3977)*   
-**Exon 6: 26530748-26530793 (46)**   
-  *Intron 6-7: 26530794-26530902 (109)*   
-**Exon 7: 26530903-26530976 (74)**   
-  *Intron 7-8: 26530977-26540652 (9676)*   
-**Exon 8: 26540653-26541568 (916)**    
-  *Intron 8-9: 26541569-26542129 (561)*   
-**Exon 9: 26542130-26542234 (105)**   
-  *Intron 9-10: 26542235-26542387 (153)*   
-**Exon 10: 26542388-26542508 (121)**   
-  *Intron 10-11: 26542509-26552948 (10440)*   
-**Exon 11: 25552949-26553070 (122)**   
-  *Intron 11-12: 26553071-26553415 (345)*   
-**Exon 12: 26553416-26553567 (152)**   
-  *Intron 12-13: 26553568-26559651 (6084)*   
-**Exon 13: 26559652-26564582 (4931)**
-
-## Hardy-Weinburg Equilibrium
-
-I ran into trouble with the &#39;vervet.population.panel&#39; file required for this section. It wasn&#39;t in the vervpop directory, so Christian Gagnon sent it to me and I downloaded it onto my computer. I then had issues with uploading the file to the SCC. The SCC cheat sheet pdf used the command &#39;scp *filename* *username*@scc1.bu.edu:~&#39;, but when I ran that command the terminal said that no such file or directory existed. I tried it in my home directory, the vervpop directory, and my eshelton directory. I was able to upload the file using SCC On Demand.
-
-I created the file &#39;pygpgc1a.vcf&#39; of the variants within the South African *pygerythrus* sample using the given code, deleting the VSAI3005 sample. 
-
-```{r}`r&#39;&#39;`
-grep pygerythrus vervet.population.panel | cut -f1 &gt; pyg.samples.list
+<pre><code>38  </code></pre>
+<p>Note: At this point vervPGC1a.full.vcf was renamed to vervpcg1a.full.vcf.</p>
+<p>Questions:<br />
+If the download of a file from the SCC is interrupted accidentally, how do I unpause the download without starting it all over again?<br />
+When I used the ‘tabix -p’ command, when I hit return it just went down a line; after a couple minutes it goes. How do I make it run sooner?</p>
+</div>
+<div id="functional-regions" class="section level2">
+<h2>Functional Regions</h2>
+<p>Number: Start coordinate-End coordinate (length)</p>
+<p><strong>Exon 1: 26,465,499-26,465,783 (285)</strong><br />
+<em>Intron 1-2: 26465784-26470781 (4998)</em><br />
+<strong>Exon 2: 26470782-26470961 (180)</strong><br />
+<em>Intron 2-3: 26470962-26523412 (52451)</em><br />
+<strong>Exon 3: 26523413-26523607 (195)</strong><br />
+<em>Intron 3-4: 26523608-26525582 (1975)</em><br />
+<strong>Exon 4: 26525583-26525705 (123)</strong><br />
+<em>Intron 4-5: 26525706-26526565 (860)</em><br />
+<strong>Exon 5: 26526566-26526770 (205)</strong><br />
+<em>Intron 5-6: 26526771-26530747 (3977)</em><br />
+<strong>Exon 6: 26530748-26530793 (46)</strong><br />
+<em>Intron 6-7: 26530794-26530902 (109)</em><br />
+<strong>Exon 7: 26530903-26530976 (74)</strong><br />
+<em>Intron 7-8: 26530977-26540652 (9676)</em><br />
+<strong>Exon 8: 26540653-26541568 (916)</strong><br />
+<em>Intron 8-9: 26541569-26542129 (561)</em><br />
+<strong>Exon 9: 26542130-26542234 (105)</strong><br />
+<em>Intron 9-10: 26542235-26542387 (153)</em><br />
+<strong>Exon 10: 26542388-26542508 (121)</strong><br />
+<em>Intron 10-11: 26542509-26552948 (10440)</em><br />
+<strong>Exon 11: 25552949-26553070 (122)</strong><br />
+<em>Intron 11-12: 26553071-26553415 (345)</em><br />
+<strong>Exon 12: 26553416-26553567 (152)</strong><br />
+<em>Intron 12-13: 26553568-26559651 (6084)</em><br />
+<strong>Exon 13: 26559652-26564582 (4931)</strong></p>
+</div>
+<div id="hardy-weinburg-equilibrium" class="section level2">
+<h2>Hardy-Weinburg Equilibrium</h2>
+<p>I ran into trouble with the ‘vervet.population.panel’ file required for this section. It wasn’t in the vervpop directory, so Christian Gagnon sent it to me and I downloaded it onto my computer. I then had issues with uploading the file to the SCC. The SCC cheat sheet pdf used the command ’scp <em>filename</em> *<a href="mailto:username*@scc1.bu.edu" class="email">username*@scc1.bu.edu</a>:~’, but when I ran that command the terminal said that no such file or directory existed. I tried it in my home directory, the vervpop directory, and my eshelton directory. I was able to upload the file using SCC On Demand.</p>
+<p>I created the file ‘pygpgc1a.vcf’ of the variants within the South African <em>pygerythrus</em> sample using the given code, deleting the VSAI3005 sample.</p>
+<pre class="{r}`r&#39;&#39;`"><code>grep pygerythrus vervet.population.panel | cut -f1 &gt; pyg.samples.list
 gedit pyg.samples.list
 module load vcftools
 vcftools --vcf vervUCP1.full.vcf --keep pyg.samples.list --recode --out pygUCP1
 mv pygUCP1.recode.vcf pygUCP1.vcf</code></pre>
 <p>I created the file ‘sepgc1a.vcf’ of the variants within the Southern Expansion using the given code. I left the VCSAI3005 sample in. The instructions also mentioned changing the taxonomic designation of two of the samples, which I was unsure how to do.</p>
+</div>
+</div>
+<div id="snps" class="section level1">
+<h1>SNPs</h1>
+<p>I opened an SCC OnDemand R server, and used the R code given in the pipeline to analyze the ‘pygpgc1a.hwe’ file. It returned 102 SNPs. The ‘sepgc1a.hwe’ file returned 276 SNPs. The details of these have been copied to text files.</p>
+<p>There was a complication and Christian Gagnon sent me the correct version of the ‘vervet.population.panel’ file. I redid the creation of the Pygerythrus and Southern Expansion files, ‘pygpgc1a.hwe’ and ‘sepgc1a.hwe’, making sure to edit ‘vervet.population.panel’ file in between to make the changes necessary to the VBOA and VSAJ2008 samples.</p>
+<p>The new ‘pygpgc1a.hwe’ and ‘sepgc1a.hwe’ files returned 102 SNPs each. The files have a lot of SNPs in common.</p>
+</div>
+<div id="linkage-disequilibrium" class="section level1">
+<h1>Linkage Disequilibrium</h1>
+<p>Following the pipeline instructions, I created the ‘pygpgc1a_loci.txt’ and ‘sepgc1a_loci.txt’ files in the directory, then opened an R server and installed the necessary packages.</p>
+<div id="ld-pygerythrus" class="section level3">
+<h3>LD: <em>pygerythrus</em></h3>
+<pre class="{r}`r&#39;&#39;`"><code>&gt; pygpgc1a_vcf&lt;-readVcf(&quot;pygpgc1a.vcf&quot;)
+&gt; pygpgc1a_matrix&lt;-genotypeToSnpMatrix(pygpgc1a_vcf)
+&gt; pygpgc1a_vcf</code></pre>
+<pre><code>class: CollapsedVCF 
+dim: 2301 48 
+rowRanges(vcf):
+  GRanges with 5 metadata columns: paramRangeID, REF, ALT, QUAL, FILTER
+info(vcf):
+  DataFrame with 0 columns: 
+geno(vcf):
+  List of length 1: GT
+geno(header(vcf)):
+      Number Type   Description    
+   GT 1      String Phased Genotype</code></pre>
+<p>I generated an LD heatmap for <em>pygerythrus</em>.</p>
+<p>I then generated a more complex heatmap, by linking the SNPs with the vervet references.</p>
+<pre class="{r}`r&#39;&#39;`"><code>&gt; vcfbig&lt;-readVcf(&quot;pygpgc1a.vcf&quot;,&quot;txdb&quot;)
+&gt; ALLmatrix&lt;-genotypeToSnpMatrix(vcfbig)
+&gt; ALLmatrix</code></pre>
+<pre><code>$genotypes
+A SnpMatrix with  48 rows and  2301 columns
+Row names:  VSAA2010 ... VSAM5007 
+Col names:  CAE27:26455516_G/A ... CAE27:26574535_G/A 
+
+$map
+DataFrame with 2301 rows and 4 columns
+              snp.names       allele.1
+            &lt;character&gt; &lt;DNAStringSet&gt;
+1    CAE27:26455516_G/A              G
+2    CAE27:26455526_G/A              G
+3    CAE27:26455669_C/T              C
+4    CAE27:26456003_C/T              C
+5    CAE27:26456070_G/A              G
+...                 ...            ...
+2297 CAE27:26574262_C/G              C
+2298 CAE27:26574290_T/C              T
+2299 CAE27:26574462_C/A              C
+2300 CAE27:26574533_C/T              C
+2301 CAE27:26574535_G/A              G
+               allele.2    ignore
+     &lt;DNAStringSetList&gt; &lt;logical&gt;
+1                     A     FALSE
+2                     A     FALSE
+3                     T     FALSE
+4                     T     FALSE
+5                     A     FALSE
+...                 ...       ...
+2297                  G     FALSE
+2298                  C     FALSE
+2299                  A     FALSE
+2300                  T     FALSE
+2301                  A     FALSE</code></pre>
+<p>For the second <em>pygerythrus</em> LD heatmap, do the highlighted locations mean anything? I chose ones at random from the ALLmatrix snp.names table. I also had trouble with R displaying the heatmap.</p>
+<p>The {gpart} code found five linkage blocks.</p>
+<pre class="{r}`r&#39;&#39;`"><code>&gt; pyg_pgc1a_res1 = BigLD(genofile = &quot;pygpgc1a.vcf&quot;, LD=&quot;r2&quot;)
+&gt; pyg_pgc1a_res1</code></pre>
+<pre><code>    chr start.index end.index start.rsID end.rsID start.bp   end.bp
+1 CAE27           8       786          .        . 26456233 26495925
+2 CAE27         804      2205          .        . 26497136 26568734
+3 CAE27        2214      2283          .        . 26569080 26573306
+4 CAE27        2285      2288          .        . 26573416 26573643
+5 CAE27        2291      2292          .        . 26573987 26573990</code></pre>
+<pre class="{r}`r&#39;&#39;`"><code>&gt; LDblockHeatmap(genofile = &quot;pygpgc1a.vcf&quot;, chrN = &quot;CAE27&quot;, geneDB = &quot;ensembl&quot;, geneid = &quot;hgnc_symbol&quot;, blocktype = &quot;bigld&quot;, LD = &quot;r2&quot;, type = &quot;png&quot;, filename = &quot;heatmap_pygpgc1a_r2&quot;, CLQmode = &quot;density&quot;, res = 600)</code></pre>
+<p>The ‘heatmap_pygpgc1a_r2.png’ file is in the same folder on my laptop as this Lab Notebook file.</p>
+<p>NOTE: Come back to the LD matrix and monochrome heatmap sections after asking about finding the SNPs of interest.</p>
+</div>
+<div id="ld-southern-expansion" class="section level3">
+<h3>LD: Southern Expansion</h3>
 </div>
 </div>
 

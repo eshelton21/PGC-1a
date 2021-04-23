@@ -123,3 +123,161 @@ I created the file 'sepgc1a.vcf' of the variants within the Southern Expansion u
 I opened an SCC OnDemand R server, and used the R code given in the pipeline to analyze the 'pygpgc1a.hwe' file. It returned 102 SNPs. The 'sepgc1a.hwe' file returned 276 SNPs. The details of these have been copied to text files. 
 
 There was a complication and Christian Gagnon sent me the correct version of the 'vervet.population.panel' file. I redid the creation of the Pygerythrus and Southern Expansion files, 'pygpgc1a.hwe' and 'sepgc1a.hwe', making sure to edit 'vervet.population.panel' file in between to make the changes necessary to the VBOA and VSAJ2008 samples.
+
+The new 'pygpgc1a.hwe' and 'sepgc1a.hwe' files returned 102 SNPs each. The files have a lot of SNPs in common.
+
+# Linkage Disequilibrium
+
+Following the pipeline instructions, I created the 'pygpgc1a_loci.txt' and 'sepgc1a_loci.txt' files in the directory, then opened an R server and installed the necessary packages. 
+
+### LD: *pygerythrus*
+
+```{r}`r''`
+> pygpgc1a_vcf<-readVcf("pygpgc1a.vcf")
+> pygpgc1a_matrix<-genotypeToSnpMatrix(pygpgc1a_vcf)
+> pygpgc1a_vcf
+```
+```
+class: CollapsedVCF 
+dim: 2301 48 
+rowRanges(vcf):
+  GRanges with 5 metadata columns: paramRangeID, REF, ALT, QUAL, FILTER
+info(vcf):
+  DataFrame with 0 columns: 
+geno(vcf):
+  List of length 1: GT
+geno(header(vcf)):
+      Number Type   Description    
+   GT 1      String Phased Genotype
+```
+
+I generated an LD heatmap for *pygerythrus*.
+
+I then generated a more complex heatmap, by linking the SNPs with the vervet references.
+
+```{r}`r''`
+> vcfbig<-readVcf("pygpgc1a.vcf","txdb")
+> ALLmatrix<-genotypeToSnpMatrix(vcfbig)
+> ALLmatrix
+```
+```
+$genotypes
+A SnpMatrix with  48 rows and  2301 columns
+Row names:  VSAA2010 ... VSAM5007 
+Col names:  CAE27:26455516_G/A ... CAE27:26574535_G/A 
+
+$map
+DataFrame with 2301 rows and 4 columns
+              snp.names       allele.1           allele.2    ignore
+            <character> <DNAStringSet> <DNAStringSetList> <logical>
+1    CAE27:26455516_G/A              G                  A     FALSE
+2    CAE27:26455526_G/A              G                  A     FALSE
+3    CAE27:26455669_C/T              C                  T     FALSE
+4    CAE27:26456003_C/T              C                  T     FALSE
+5    CAE27:26456070_G/A              G                  A     FALSE
+...                 ...            ...                ...       ...
+2297 CAE27:26574262_C/G              C                  G     FALSE
+2298 CAE27:26574290_T/C              T                  C     FALSE
+2299 CAE27:26574462_C/A              C                  A     FALSE
+2300 CAE27:26574533_C/T              C                  T     FALSE
+2301 CAE27:26574535_G/A              G                  A     FALSE
+```
+For the second *pygerythrus* LD heatmap, do the highlighted locations mean anything? I chose ones at random from the ALLmatrix snp.names table. I also had trouble with R displaying the heatmap.
+
+The {gpart} code found five linkage blocks.
+```{r}`r''`
+> pyg_pgc1a_res1 = BigLD(genofile = "pygpgc1a.vcf", LD="r2")
+> pyg_pgc1a_res1
+```
+```
+    chr start.index end.index start.rsID end.rsID start.bp   end.bp
+1 CAE27           8       786          .        . 26456233 26495925
+2 CAE27         804      2205          .        . 26497136 26568734
+3 CAE27        2214      2283          .        . 26569080 26573306
+4 CAE27        2285      2288          .        . 26573416 26573643
+5 CAE27        2291      2292          .        . 26573987 26573990
+```
+```{r}`r''`
+> LDblockHeatmap(genofile = "pygpgc1a.vcf", chrN = "CAE27", geneDB = "ensembl", geneid = "hgnc_symbol", blocktype = "bigld", LD = "r2", type = "png", filename = "heatmap_pygpgc1a_r2", CLQmode = "density", res = 600)
+```   
+
+The 'heatmap_pygpgc1a_r2.png' file is in the same folder on my laptop as this Lab Notebook file.
+
+NOTE: Come back to the LD matrix and monochrome heatmap sections after asking about finding the SNPs of interest.
+
+### LD: Southern Expansion
+
+```{r}`r''`
+> sepgc1a_vcf<-readVcf("sepgc1a.vcf")
+> sepgc1a_matrix<-genotypeToSnpMatrix(sepgc1a_vcf)
+> sepgc1a_vcf
+```
+```
+class: CollapsedVCF 
+dim: 2301 73 
+rowRanges(vcf):
+  GRanges with 5 metadata columns: paramRangeID, REF, ALT, QUAL, FILTER
+info(vcf):
+  DataFrame with 0 columns: 
+geno(vcf):
+  List of length 1: GT
+geno(header(vcf)):
+      Number Type   Description    
+   GT 1      String Phased Genotype
+```
+```{r}`r''`
+> sepgc1a_LD<-ld(sepgc1a_matrix$genotypes, depth = 825, stats = "R.squared")
+> cols=colorRampPalette(c("yellow","red"))(10)
+> image(sepgc1a_LD, lwd=0, cuts=9, col.regions=cols, colorkey = TRUE)
+```
+```{r}`r''`
+> txdb<-makeTxDbFromEnsembl(organism = "Chlorocebus sabaeus", server = "useastdb.ensembl.org")
+> vcfbig2<-readVcf("sepgc1a.vcf", "txdb")
+> ALLmatrix2<-genotypeToSnpMatrix(vcfbig2)
+> ALLmatrix2
+```
+```
+$genotypes
+A SnpMatrix with  73 rows and  2301 columns
+Row names:  AG23 ... VZC1020 
+Col names:  CAE27:26455516_G/A ... CAE27:26574535_G/A 
+
+$map
+DataFrame with 2301 rows and 4 columns
+              snp.names       allele.1           allele.2    ignore
+            <character> <DNAStringSet> <DNAStringSetList> <logical>
+1    CAE27:26455516_G/A              G                  A     FALSE
+2    CAE27:26455526_G/A              G                  A     FALSE
+3    CAE27:26455669_C/T              C                  T     FALSE
+4    CAE27:26456003_C/T              C                  T     FALSE
+5    CAE27:26456070_G/A              G                  A     FALSE
+...                 ...            ...                ...       ...
+2297 CAE27:26574262_C/G              C                  G     FALSE
+2298 CAE27:26574290_T/C              T                  C     FALSE
+2299 CAE27:26574462_C/A              C                  A     FALSE
+2300 CAE27:26574533_C/T              C                  T     FALSE
+2301 CAE27:26574535_G/A              G                  A     FALSE
+```
+
+The {gpart} code found seven linkage blocks.
+
+```{r}`r''`
+> se_pgc1a_res1 = BigLD(genofile = "sepgc1a.vcf", LD = "r2")
+> se_pgc1a_res1
+```
+```
+    chr start.index end.index start.rsID end.rsID start.bp   end.bp
+1 CAE27          11      1327          .        . 26456426 26517910
+2 CAE27        1338      1356          .        . 26518801 26519695
+3 CAE27        1361      1391          .        . 26520054 26521556
+4 CAE27        1408      1437          .        . 26522252 26522994
+5 CAE27        1438      1447          .        . 26523036 26523284
+6 CAE27        1451      1509          .        . 26523595 26526968
+7 CAE27        1514      2301          .        . 26527279 26574535
+```
+```{r}`r''`
+> LDblockHeatmap(genofile = "sepgc1a.vcf", chrN = "CAE27", geneDB = "ensembl", geneid = "hgnc_symbol", blocktype = "bigld", LD = "r2", type = "png", filename = "heatmap_sepgc1a_r2", CLQmode = "density", res = 600)
+```
+
+The 'heatmap_sepgc1a_r2.png' file can be found in the same folder on my laptop.
+
