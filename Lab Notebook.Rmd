@@ -129,6 +129,24 @@ The new 'pygpgc1a.hwe' and 'sepgc1a.hwe' files returned 102 SNPs each. The files
 # Linkage Disequilibrium
 
 Following the pipeline instructions, I created the 'pygpgc1a_loci.txt' and 'sepgc1a_loci.txt' files in the directory, then opened an R server and installed the necessary packages. 
+```{r}`r''`
+library(devtools)
+library(RMariaDB)
+library(BiocManager)
+devtools::install_github("SFUStatgen/LDheatmap")
+BiocManager::install("snpStats")
+BiocManager::install("VariantAnnotation")
+BiocManager::install("GenomicFeatures")
+BiocManager::install("gpart")
+library(tidyverse)
+library(snpStats)
+library(VariantAnnotation)
+library(LDheatmap)
+library(GenomicFeatures)
+library(gpart)
+library(Matrix)
+```
+
 
 ### LD: *pygerythrus*
 
@@ -182,7 +200,7 @@ DataFrame with 2301 rows and 4 columns
 2300 CAE27:26574533_C/T              C                  T     FALSE
 2301 CAE27:26574535_G/A              G                  A     FALSE
 ```
-For the second *pygerythrus* LD heatmap, do the highlighted locations mean anything? I chose ones at random from the ALLmatrix snp.names table. I also had trouble with R displaying the heatmap.
+
 
 The {gpart} code found five linkage blocks.
 ```{r}`r''`
@@ -201,9 +219,9 @@ The {gpart} code found five linkage blocks.
 > LDblockHeatmap(genofile = "pygpgc1a.vcf", chrN = "CAE27", geneDB = "ensembl", geneid = "hgnc_symbol", blocktype = "bigld", LD = "r2", type = "png", filename = "heatmap_pygpgc1a_r2", CLQmode = "density", res = 600)
 ```   
 
-The 'heatmap_pygpgc1a_r2.png' file is in the same folder on my laptop as this Lab Notebook file.
+The 'heatmap_pygpgc1a_r2.png' file is in the .
 
-NOTE: Come back to the LD matrix and monochrome heatmap sections after asking about finding the SNPs of interest.
+The specific SNPs are the hwe coordinates with the "_X/x", in the ALLmatrix and ALLmatrix2. 
 
 ### LD: Southern Expansion
 
