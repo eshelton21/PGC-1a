@@ -171,6 +171,12 @@ geno(header(vcf)):
 
 I generated an LD heatmap for *pygerythrus*.
 
+```{r}`r''`
+> cols=colorRampPalette(c("yellow","red"))(10)
+> image(pygpgc1a_LD,lwd=0,cuts=9,col.regions=cols,colorkey=TRUE)
+```
+
+
 I then generated a more complex heatmap, by linking the SNPs with the vervet references.
 
 ```{r}`r''`
