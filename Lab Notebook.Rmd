@@ -206,6 +206,18 @@ DataFrame with 2301 rows and 4 columns
 2300 CAE27:26574533_C/T              C                  T     FALSE
 2301 CAE27:26574535_G/A              G                  A     FALSE
 ```
+```{r}`r''`
+> allheatmapr <- LDheatmap(ALLmatrix$genotypes,
++                          genetic.distances=positions_pygpgc1a,
++                         distances="physical",LDmeasure="r",
++                          title="Pairwise LD with R^2",
++                          add.map=TRUE, add.key=TRUE,
++                          geneMapLocation=0.15,
++                         SNP.name=c("CAE27:26457890_C/G","CAE27:26512806_G/A","CAE27:26512817_A/C","CAE27:26512838_A/G","CAE27:26512856_G/A","CAE27:26512884_C/G","CAE27:26522930_G/A","CAE27:26522937_G/A","CAE27:26522971_G/A","CAE27:26522990_A/G","CAE27:26522992_C/T","CAE27:26522994_A/G","CAE27:26549769_G/T","CAE27:26558338_T/C","CAE27:26558347_G/T","CAE27:26573010_T/C"),
++                          color=NULL, newpage=TRUE,
++                          name="ldheatmap")
+```
+I was unsure which SNPs to highlight, so I chose the first, the last, and several SNPS that were located closely together.
 
 
 The {gpart} code found five linkage blocks.
@@ -225,7 +237,7 @@ The {gpart} code found five linkage blocks.
 > LDblockHeatmap(genofile = "pygpgc1a.vcf", chrN = "CAE27", geneDB = "ensembl", geneid = "hgnc_symbol", blocktype = "bigld", LD = "r2", type = "png", filename = "heatmap_pygpgc1a_r2", CLQmode = "density", res = 600)
 ```   
 
-The 'heatmap_pygpgc1a_r2.png' file is in the .
+The 'heatmap_pygpgc1a_r2.png' file is in the PGC-1a directory.
 
 The specific SNPs are the hwe coordinates with the "_X/x", in the ALLmatrix and ALLmatrix2. 
 
@@ -260,6 +272,17 @@ geno(header(vcf)):
 > ALLmatrix2<-genotypeToSnpMatrix(vcfbig2)
 > ALLmatrix2
 ```
+```{r}`r''`
+> allheatmapr2 <- LDheatmap(ALLmatrix2$genotypes,
++                           genetic.distances=positions_sepgc1a,
++                           distances="physical",LDmeasure="r",
++                           title="Pairwise LD with R^2",
++                           add.map=TRUE, add.key=TRUE,
++                           geneMapLocation=0.15,
++                         SNP.name=c("CAE27:26457890_C/G","CAE27:26512806_G/A","CAE27:26512817_A/C","CAE27:26512838_A/G","CAE27:26512856_G/A","CAE27:26512884_C/G","CAE27:26522930_G/A","CAE27:26522937_G/A","CAE27:26522971_G/A","CAE27:26522990_A/G","CAE27:26522992_C/T","CAE27:26522994_A/G","CAE27:26549769_G/T","CAE27:26558338_T/C","CAE27:26558347_G/T","CAE27:26573010_T/C"),
++                         color=NULL, newpage=TRUE,                         name="ldheatmap")
+```
+
 ```
 $genotypes
 A SnpMatrix with  73 rows and  2301 columns
@@ -303,5 +326,5 @@ The {gpart} code found seven linkage blocks.
 > LDblockHeatmap(genofile = "sepgc1a.vcf", chrN = "CAE27", geneDB = "ensembl", geneid = "hgnc_symbol", blocktype = "bigld", LD = "r2", type = "png", filename = "heatmap_sepgc1a_r2", CLQmode = "density", res = 600)
 ```
 
-The 'heatmap_sepgc1a_r2.png' file can be found in the same folder on my laptop.
+The 'heatmap_sepgc1a_r2.png' file can be found in the PGC-1a directory.
 
