@@ -328,3 +328,26 @@ The {gpart} code found seven linkage blocks.
 
 The 'heatmap_sepgc1a_r2.png' file can be found in the PGC-1a directory.
 
+
+# Population Structure
+
+Analyzing the population structure to determine if the variation is a result of phylogeny, and therefore genetic drift, or if there is a selection pressure driving that variation.
+
+Packages needed for RStudio:
+
+```{r}`r''`
+library(devtools)
+devtools:install_github("knausb/vcfR")
+library(vcfR)
+library(adegenet)
+library(ggplot2)
+library(vegan)
+library(poppr)
+library(dplyr)
+```
+Loading the vcf file:
+
+```{r}`r''`
+>pgc1a <- read.vcfR("sepgc1a.vcf", verbose = TRUE)
+```
+
