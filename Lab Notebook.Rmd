@@ -345,7 +345,7 @@ library(vegan)
 library(poppr)
 library(dplyr)
 ```
-Loading the vcf file:
+Load the vcf file; convert it to a GENIND file; read in the population panel data; filter out the non-SE samples.
 
 ```{r}`r''`
 >pgc1a <- read.vcfR("sepgc1a.vcf", verbose = TRUE)
