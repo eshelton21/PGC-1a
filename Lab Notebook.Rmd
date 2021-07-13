@@ -337,7 +337,7 @@ Packages needed for RStudio:
 
 ```{r}`r''`
 library(devtools)
-devtools:install_github("knausb/vcfR")
+devtools::install_github("knausb/vcfR")
 library(vcfR)
 library(adegenet)
 library(ggplot2)
@@ -345,6 +345,8 @@ library(vegan)
 library(poppr)
 library(dplyr)
 ```
+The 'devtools::install_github("knausb/vcfR")' prompted the download of updates to packages. The adegenet and poppr packages had to be installed before download. The poppr download triggered a session reboot, twice. It would say 'Loading required package: adegenet', freeze, and then RStudio would give me the error message of an unexpected workspace crash.
+
 Load the vcf file; convert it to a GENIND file; read in the population panel data; filter out the non-SE samples.
 
 ```{r}`r''`
