@@ -345,7 +345,10 @@ library(vegan)
 library(poppr)
 library(dplyr)
 ```
-The 'devtools::install_github("knausb/vcfR")' prompted the download of updates to packages. The adegenet and poppr packages had to be installed before download. The poppr download triggered a session reboot, twice. It would say 'Loading required package: adegenet', freeze, and then RStudio would give me the error message of an unexpected workspace crash.
+  The 'devtools::install_github("knausb/vcfR")' prompted the download of updates to packages. The adegenet and poppr packages had to be installed before download. The poppr download triggered a session reboot, twice. It would say 'Loading required package: adegenet', freeze, and then RStudio would give me the error message of an unexpected workspace crash. 8/24/21: The command 'library(adegenet)' gave me the message 'Error: package or namespace load failed for 'adegenet' in dyn.load...'. I re-installed the package, which went through, then tried the command again, which caused an error in the RServer that restarted the session. It began restarting, but didn't finish in 60 min, and I was timed out for inactivity. I opened the RServer again and the 'library(adegenet)' command gave me the same error message. Under the Packages tab in the lower right window, I clicked the box to load 'adegenet', which generated the prompt 'library(adegenet)' in the main window. Again, the RServer crashed and froze while restarting. I was able to type, so I put 'q', and it returned to normal, without the adegenet package downloaded from what I could tell. 
+  The issue seems to be triggered by the second attempted download of adegenet. The first will give this message: 'Error: package or namespace load failed for ‘adegenet’ in dyn.load(file, DLLpath = DLLpath, ...):
+ unable to load shared object '/share/pkg.7/r/4.0.2/install/lib64/R/library/sf/libs/sf.so':
+  /share/pkg.7/gdal/3.1.2/install/lib-unified/libspatialite.so.7: undefined symbol: sqlite3_strlike'. The second will trigger a restart of the RServer, which will freeze but can be cancelled by using 'q'. 
 
 Load the vcf file; convert it to a GENIND file; read in the population panel data; filter out the non-SE samples.
 
