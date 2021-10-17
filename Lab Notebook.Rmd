@@ -346,11 +346,7 @@ library(poppr)
 library(dplyr)
 ```
   
-  The 'devtools::install_github("knausb/vcfR")' prompted the download of updates to packages. The adegenet and poppr packages had to be installed before download. The poppr download triggered a session reboot, twice. It would say 'Loading required package: adegenet', freeze, and then RStudio would give me the error message of an unexpected workspace crash. 8/24/21: The command 'library(adegenet)' gave me the message 'Error: package or namespace load failed for 'adegenet' in dyn.load...'. I re-installed the package, which went through, then tried the command again, which caused an error in the RServer that restarted the session. It began restarting, but didn't finish in 60 min, and I was timed out for inactivity. I opened the RServer again and the 'library(adegenet)' command gave me the same error message. Under the Packages tab in the lower right window, I clicked the box to load 'adegenet', which generated the prompt 'library(adegenet)' in the main window. Again, the RServer crashed and froze while restarting. I was able to type, so I put 'q', and it returned to normal, without the adegenet package downloaded from what I could tell. 
-  The issue seems to be triggered by the second attempted download of adegenet. The first will give this message: 'Error: package or namespace load failed for ‘adegenet’ in dyn.load(file, DLLpath = DLLpath, ...):
- unable to load shared object '/share/pkg.7/r/4.0.2/install/lib64/R/library/sf/libs/sf.so':
-  /share/pkg.7/gdal/3.1.2/install/lib-unified/libspatialite.so.7: undefined symbol: sqlite3_strlike'. The second will trigger a restart of the RServer, which will freeze but can be cancelled by using 'q'. 
-  Prof. Schmitt advised that I update R, as that might be the problem. I've been using the SCC, so when I started an RStudio Server session this time I double checked the version of R. The default was 4.0.2, but the highest was 4.1.1, which I used. After the command 'devtools::install_github("knausb/vcfR")' prompted the download of updates to packages, like before. I chose to update all CRAN packages. The 'vcfR' package loaded, but the 'adegenet' package required installation. The 'library(adegenet)' command had no issues.
+  The 'devtools::install_github("knausb/vcfR")' had an issue with downloading. Prof. Schmitt advised that I update R, as that might be the problem. I've been using the SCC, so when I started an RStudio Server session this time I double checked the version of R. The default was 4.0.2, but the highest was 4.1.1, which I used. After the command 'devtools::install_github("knausb/vcfR")' prompted the download of updates to packages, like before. I chose to update all CRAN packages. The 'vcfR' package loaded, but the 'adegenet' package required installation. The 'library(adegenet)' command had no issues.
 
 Load the vcf file; convert it to a GENIND file; read in the population panel data; filter out the non-SE samples. Check all the samples in the VCF and population data frame are the same. 
 
@@ -386,7 +382,74 @@ All variants processed
 ```
 [1] TRUE
 ```
+
   Note: assigning column names in the pipeline includes the sixth column "population"; I removed this because the dataframe only had five columns. "pop" will refer to the population column going forward.
 
 Assign population panel data to GENIND (with data matched to panel ID); set the Population variable as the population; create a GENLIGHT object for PCA.
+
+```{r}`
+> strata(pgc1a_genind)<-pop.data[(match(indNames(pgc1a_genind), pop.data$sample)),]
+> setPop(pgc1a_genind)<-~pop
+> pgc1a_genlight<-vcfR2genlight(pgc1a)
+> strata(pgc1a_genlight)<-pop.data[(match(indNames(pgc1a_genlight), pop.data$sample)),]
+> setPop(pgc1a_genlight)<-~pop
+```
+
+Note: When I opened the R server, a popup told me the previous session had crashed and I might have lost work, and the work I had done yesterday (under Population Structure) was gone. Redoing it was a short process with no errors.
+
+## PCA
+
+### Separation by Taxon
+
+Assign taxon data to GENLIGHT; run PCA; graph the PCA eigenvalues. Create a dataframe with PCA scores; assign population data; graph with ggplot.
+
+```{r}`
+> setPop(pgc1a_genlight)<-~taxon
+> pca<-glPca(pgc1a_genlight, nf = 2)
+> barplot(100*pca$eig/sum(pca$eig), col = heat.colors(50), main="PCA Eigenvalues", ylab="% of Variance Explained", xlab="Eigenvalues")
+> pca.scores<-as.data.frame(pca$scores)
+> pca.scores$Taxon<-pop(pgc1a_genlight)
+> p<-ggplot(pca.scores, aes(x=PC1, y=PC2, colour=Taxon)) + geom_point(size=2) + stat_ellipse(level=0.95, size=1) + theme_bw()
+> print(p)
+```
+
+Run a multivariate AMOVA with Adonis.
+
+```{r}`
+> adonis1<-adonis(pca$scores ~ Taxon, data = pca.scores, method='eu', na.rm=TRUE)
+> adonis1
+```
+```
+Call:
+adonis(formula = pca$scores ~ Taxon, data = pca.scores, method = "eu",      na.rm = TRUE) 
+Permutation: free
+Number of permutations: 999
+Terms added sequentially (first to last)
+          Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)    
+Taxon      2    348.56 174.281  11.459 0.24665  0.001 ***
+Residuals 70   1064.64  15.209         0.75335           
+Total     72   1413.20                 1.00000           
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+```
+
+This suggests that about 24.6% of the observed genetic variance is due to significant differentiation of PGC1-a at the taxonomic level.
+
+### Separation by Population
+
+Assign population data; run PCA, graph PCA eigenvalues. Create a dataframe with pca scores; assign population data; graph with ggplot.
+
+```{r}`
+> setPop(pgc1a_genlight)<-~pop
+> pca<-glPca(pgc1a_genlight, nf = 2)
+> barplot(100*pca$eig/sum(pca$eig), col = heat.colors(50), main="PCA Eigenvalues", ylab="% of Variance Explained", xlab="Eigenvalues")
+> pca.scores<-as.data.frame(pca$scores)
+> pca.scores$Population<-pop(pgc1a_genlight)
+> p<-ggplot(pca.scores, aes(x=PC1, y=PC2, color=Population)) + geom_point(size=2) + stat_ellipse(level=0.95, size=1) + theme_bw() + scale_color_manual(values=c("purple4","salmon","dark green","forest green","seagreen1","dodgerblue","green","pink"))
+> print(p)
+```
+
+Note: when graphing with ggplot, I got the error "Too few points to calculate an ellipse. Insufficient values in manual scale. 22 needed but only 8 provided". In the pipeline, this seems to have been resolved with (geom_path), but the specific solution was unclear.
+
+
 
