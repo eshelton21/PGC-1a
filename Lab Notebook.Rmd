@@ -375,7 +375,7 @@ All variants processed
 ```{r}`r''`
 > pgc1a_genind<-vcfR2genind(pgc1a, sep = "[|/]")
 > pop.data<-read.table("vervet.population.panel", sep = "\t", header = FALSE)
-> colnames(pop.data)<-c("sample", "pop", "region", "country", "taxon")
+> colnames(pop.data)<-c("sample", "pop", "region", "country", "taxon", "population")
 > pop.data<-filter(pop.data,taxon == "pygerythrus" | taxon == "hilgerti" | taxon == "cynosuros")
 > all(colnames(pgc1a@gt)[-1] == pop.data$AccessID)
 ```
@@ -383,16 +383,16 @@ All variants processed
 [1] TRUE
 ```
 
-  Note: assigning column names in the pipeline includes the sixth column "population"; I removed this because the dataframe only had five columns. "pop" will refer to the population column going forward.
+  Note: The issue I ran into in the separation by population PCA section below was sovled by using a newer vervet population panel file. From population structure onwards the newer file is used; the older file is used for data collected before.
 
 Assign population panel data to GENIND (with data matched to panel ID); set the Population variable as the population; create a GENLIGHT object for PCA.
 
 ```{r}`
 > strata(pgc1a_genind)<-pop.data[(match(indNames(pgc1a_genind), pop.data$sample)),]
-> setPop(pgc1a_genind)<-~pop
+> setPop(pgc1a_genind)<-~population
 > pgc1a_genlight<-vcfR2genlight(pgc1a)
 > strata(pgc1a_genlight)<-pop.data[(match(indNames(pgc1a_genlight), pop.data$sample)),]
-> setPop(pgc1a_genlight)<-~pop
+> setPop(pgc1a_genlight)<-~population
 ```
 
 Note: When I opened the R server, a popup told me the previous session had crashed and I might have lost work, and the work I had done yesterday (under Population Structure) was gone. Redoing it was a short process with no errors.
@@ -440,7 +440,7 @@ This suggests that about 24.6% of the observed genetic variance is due to signif
 Assign population data; run PCA, graph PCA eigenvalues. Create a dataframe with pca scores; assign population data; graph with ggplot.
 
 ```{r}`
-> setPop(pgc1a_genlight)<-~pop
+> setPop(pgc1a_genlight)<-~population
 > pca<-glPca(pgc1a_genlight, nf = 2)
 > barplot(100*pca$eig/sum(pca$eig), col = heat.colors(50), main="PCA Eigenvalues", ylab="% of Variance Explained", xlab="Eigenvalues")
 > pca.scores<-as.data.frame(pca$scores)
@@ -449,7 +449,109 @@ Assign population data; run PCA, graph PCA eigenvalues. Create a dataframe with 
 > print(p)
 ```
 
-Note: when graphing with ggplot, I got the error "Too few points to calculate an ellipse. Insufficient values in manual scale. 22 needed but only 8 provided". In the pipeline, this seems to have been resolved with (geom_path), but the specific solution was unclear.
+Note: when graphing with ggplot, I got the error "Too few points to calculate an ellipse. Insufficient values in manual scale. 22 needed but only 8 provided". In the pipeline, this seems to have been resolved with (geom_path), but the specific solution was unclear. ETA: This issue was solved by using a newer vervet population panel file.
 
+Run a multivariate AMOVA with Adonis.
+```{r}`
+> adonis2<-adonis(pca$scores ~ Population, data = pca.scores, method='eu', na.rm = TRUE)
+> adonis2
+```
+```
+Call:
+adonis(formula = pca$scores ~ Population, data = pca.scores,      method = "eu", na.rm = TRUE) 
+Permutation: free
+Number of permutations: 999
+Terms added sequentially (first to last)
+           Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)    
+Population  7    680.57  97.224  8.6258 0.48158  0.001 ***
+Residuals  65    732.64  11.271         0.51842           
+Total      72   1413.20                 1.00000           
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+```
 
+This suggests that about 48.1% of the observed genetic variance is due to significant differentiation at the population level.
+
+## DAPC
+
+Using the population as the grouping variables, then plotting the data.
+
+```{r}`
+> dapc<-dapc(pgc1a_genind, n.pca = 2, n.da = 2)
+> dapc$grp
+```
+```
+ [1] East Africa   East Africa   Zambia-Chobe  Zambia-Chobe  East Africa  
+ [6] East Africa   East Africa   East Africa   FS North      FS North     
+[11] FS North      FS South      FS South      FS South      FS South     
+[16] FS South      FS South      FS South      FS South      FS South     
+[21] FS South      FS South      FS North      FS North      FS North     
+[26] FS North      FS North      FS North      KwaZulu-Natal KwaZulu-Natal
+[31] KwaZulu-Natal KwaZulu-Natal KwaZulu-Natal KwaZulu-Natal KwaZulu-Natal
+[36] KwaZulu-Natal KwaZulu-Natal KwaZulu-Natal KwaZulu-Natal KwaZulu-Natal
+[41] KwaZulu-Natal KwaZulu-Natal KwaZulu-Natal Limpopo       FS North     
+[46] Eastern Cape  Eastern Cape  Eastern Cape  Eastern Cape  Eastern Cape 
+[51] Eastern Cape  Eastern Cape  Eastern Cape  Eastern Cape  Eastern Cape 
+[56] Eastern Cape  Eastern Cape  Zambia Kafue  Zambia Kafue  Zambia Kafue 
+[61] Zambia Kafue  Zambia Kafue  Zambia Kafue  Zambia Kafue  Zambia Kafue 
+[66] Zambia Kafue  Zambia-Chobe  Zambia-Chobe  Zambia-Chobe  Zambia-Chobe 
+[71] Zambia-Chobe  Zambia-Chobe  Zambia-Chobe 
+8 Levels: East Africa Zambia-Chobe FS North FS South ... Zambia Kafue
+```
+```{r}`
+> scatter(dapc, cex = 2, legend = TRUE, clabel = F, posi.leg = "bottomleft", scree.pca = TRUE, posi.pca = "topright", cleg = 0.75, col=c("purple4","pink","dark green","forest green","seagreen1","dodgerblue","green","salmon"))
+```
+
+## AMOVA
+
+Run the AMOVA of PGC1-a (population) with GENLIGHT formatted data. The Limpopo sample should be deleted and removed as a population to run the AMOVA. Then test significance with randtest.
+
+```{r}`
+library(poppr)
+> pgc1a_genlight2<-popsub(pgc1a_genlight, exclude = c("Limpopo"))
+> amova1<-poppr.amova(pgc1a_genlight2, ~taxon/population)
+> amova1
+```
+```
+$call
+ade4::amova(samples = xtab, distances = xdist, structures = xstruct)
+$results
+                                   Df    Sum Sq  Mean Sq
+Between taxon                       2  1336.812 668.4062
+Between population Within taxon     4  2010.997 502.7493
+Between samples Within population  65  7530.079 115.8474
+Within samples                     72  7845.000 108.9583
+Total                             143 18722.889 130.9293
+$componentsofcovariance
+                                                   Sigma          %
+Variations  Between taxon                       7.703544   5.606075
+Variations  Between population Within taxon    17.307823  12.595366
+Variations  Between samples Within population   3.444518   2.506668
+Variations  Within samples                    108.958333  79.291891
+Total variations                              137.414219 100.000000
+$statphi
+                              Phi
+Phi-samples-total      0.20708109
+Phi-samples-population 0.03064440
+Phi-population-taxon   0.13343407
+Phi-taxon-total        0.05606075
+```
+```{r}`
+> amova.test<-randtest(amova1)
+> plot(amova.test)
+> amova.test
+```
+```
+class: krandtest lightkrandtest 
+Monte-Carlo tests
+Call: randtest.amova(xtest = amova1)
+Number of tests:   4 
+Adjustment method for multiple comparisons:   none 
+Permutation number:   99 
+                           Test        Obs    Std.Obs   Alter Pvalue
+1     Variations within samples 108.958333 -7.3309278    less   0.01
+2    Variations between samples   3.444518  0.9458075 greater   0.19
+3 Variations between population  17.307823 13.4899031 greater   0.01
+4      Variations between taxon   7.703544  2.0824085 greater   0.04
+```
 
